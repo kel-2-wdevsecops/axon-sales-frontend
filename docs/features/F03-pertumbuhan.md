@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Prioritas | P0 |
-| Repo / branch | FE · `feat/f03-pertumbuhan` |
+| Repo / branch | FE · `feature/analisis-pertumbuhan` |
 | Pasangan BE | `feat/f03-pertumbuhan` di repo BE (endpoint `GET /api/v1/dashboard/growth`) |
 | Route FE | `/pertumbuhan` |
 | Padanan Power BI | Halaman **Sales** |
 | Bergantung pada | FE F06 dan FE F01 (komponen bersama) ter-merge; BE F03 ter-merge (atau BE lokal berjalan dengan endpoint-nya) |
-| Status | ⬜ Belum mulai |
+| Status | 🟨 Sedang dikerjakan |
 
 ## Tujuan
 
@@ -58,23 +58,25 @@ Growth positif diberi warna dan ikon naik, negatif warna dan ikon turun (tidak h
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f03-pertumbuhan` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F03 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Growth` di `src/types/index.ts`; `api.growth(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useGrowth` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `year`).
-- [ ] 4. Fungsi murni + test di `src/lib/`: format persen bertanda (`+36,13 %`), `null` → "—", label periode, tooltip parsial dari `dataRange.to`.
-- [ ] 5. Halaman di `src/pages/growth/` dibungkus `QueryState`; daftarkan route `/pertumbuhan` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`.
-- [ ] 6. Pasang filter F06 (tahun).
-- [ ] 7. Kartu YTD (Jan–Mei 2005 vs Jan–Mei 2004) memakai komponen bersama F01.
-- [ ] 8. Tabel YoY, QoQ (dengan penjualan kuartal berjalan), dan MoM memakai `DataTable`; sel growth dengan ikon naik/turun **dan** warna; `null` tampil "—"; baris parsial berlabel "parsial" dengan tooltip.
-- [ ] 9. Kolom berkelompok penjualan dan profit per tahun dengan judul, label sumbu, dan alternatif teks.
-- [ ] 10. Keadaan `EmptyState`; responsif (tabel tidak meluap horizontal di mobile); cek CSP.
-- [ ] 11. Uji manual terhadap BE lokal berisi dump; centang kriteria F06 yang menunggu halaman ini (`/?year=2004&country=USA` → `/pertumbuhan?year=2004`).
-- [ ] 12. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Buat branch `feat/f03-pertumbuhan` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F03 di `docs/PRD.md` §7 menjadi 🟨. _(Dikerjakan di `feature/analisis-pertumbuhan`, dari main yang memuat fondasi, F06, dan F01; PRD §7 sudah 🟨.)_
+- [x] 2. Tipe `Growth` di `src/types/index.ts`; `api.growth(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`. _(Ditambah `GrowthFilter`, `GrowthPoint`, `YearToDate`. Bentuk mengikuti kode BE `lib/growth.ts`: `previous` bertipe `number | null`, bukan `number` seperti contoh JSON di atas.)_
+- [x] 3. Hook `useGrowth` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `year`). _(Filter dari `useDashboardFilter('growth')`; opsi `enabled` seperti `useOverview`.)_
+- [x] 4. Fungsi murni + test di `src/lib/`: format persen bertanda (`+36,13 %`), `null` → "—", label periode, tooltip parsial dari `dataRange.to`. _(`growth.ts` + `growth.test.ts`; `formatIsoDate` ditambah di `period.ts`. Persen negatif memakai tanda minus U+2212; `null` tampil `--` mengikuti `EMPTY_VALUE` di `format.ts`.)_
+- [x] 5. Halaman di `src/pages/growth/` dibungkus `QueryState`; daftarkan route `/pertumbuhan` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`. _(Route lazy; menu "Pertumbuhan" dengan ikon baru `TrendingUpIcon`.)_
+- [x] 6. Pasang filter F06 (tahun). _(`FilterBar page="growth"`: hanya tahun.)_
+- [x] 7. Kartu YTD (Jan–Mei 2005 vs Jan–Mei 2004) memakai komponen bersama F01. _(`KpiCard` untuk dua penjualan; kartu pertumbuhan YTD memakai gaya yang sama karena `KpiCard` hanya menerima teks. Bagian disembunyikan bila `ytd` null.)_
+- [x] 8. Tabel YoY, QoQ (dengan penjualan kuartal berjalan), dan MoM memakai `DataTable`; sel growth dengan ikon naik/turun **dan** warna; `null` tampil "—"; baris parsial berlabel "parsial" dengan tooltip. _(`GrowthTableCard`, `GrowthValue`, `PartialBadge`; tooltip lewat `title`, popup saat fokus keyboard, dan teks untuk pembaca layar.)_
+- [x] 9. Kolom berkelompok penjualan dan profit per tahun dengan judul, label sumbu, dan alternatif teks. _(`SalesProfitByYearChart` lewat `ChartCard` + `ChartTable`.)_
+- [x] 10. Keadaan `EmptyState`; responsif (tabel tidak meluap horizontal di mobile); cek CSP. _(`DataTable` menjadi kartu per baris di layar sempit; tanpa `<style>` runtime, sumber eksternal, atau `dangerouslySetInnerHTML`. Tampilan di browser belum dilihat: belum terbukti.)_
+- [ ] 11. Uji manual terhadap BE lokal berisi dump; centang kriteria F06 yang menunggu halaman ini (`/?year=2004&country=USA` → `/pertumbuhan?year=2004`). _(Belum dikerjakan: butuh BE lokal dan browser.)_
+- [x] 12. `npm run lint`, `npm test`, `npm run build` hijau. _(Lihat laporan pengerjaan.)_
 - [ ] 13. Commit terakhir: status F03 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 ## Kriteria Penerimaan
 
 Nilai yang tampil harus sama dengan respons API; angka acuan lengkap ada di dokumen F03 repo BE.
+
+_Catatan: belum terbukti. Kriteria di bawah butuh BE lokal berisi dump dan browser; di branch ini baru lolos lint, test unit (format, label, tooltip, arah growth), dan build._
 
 - [ ] Tabel YoY menampilkan 2003 "—", 2004 +36,13 %, 2005 −60,78 % dengan label "parsial".
 - [ ] Tabel QoQ menampilkan Q4 2003 +188,39 % dan Q1 2004 −55,06 %.

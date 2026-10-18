@@ -28,6 +28,11 @@
   --color-note-soft: #fbf3db;
   --color-note-ink: #956400;
 
+  /* Pertumbuhan naik/turun (F03). Selalu dipasangkan dengan ikon dan tanda +/-,
+     tidak pernah warna saja. Sama dengan --color-chart-2 / --color-chart-4. */
+  --color-gain: #346538;
+  --color-loss: #9f2f2d;
+
   /* Seri grafik. Semuanya >= 3:1 terhadap putih (WCAG 1.4.11); makna tidak
      boleh hanya bergantung pada warna, jadi grafik tetap perlu label/legenda.
      Pakai lewat `fill="var(--color-chart-1)"`, bukan hex di komponen. */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { describeDataRange, partialPeriods, relevantPartialPeriods } from './period';
+import { describeDataRange, formatIsoDate, partialPeriods, relevantPartialPeriods } from './period';
 
 const AXON = { from: '2003-01-06', to: '2005-05-31' };
 
@@ -76,5 +76,19 @@ describe('relevantPartialPeriods', () => {
     const range = { from: '2003-01-06', to: '2005-05-15' };
     expect(labels({ year: 2005, month: 5 }, range)).toEqual(['Mei 2005 (s.d. tanggal 15)']);
     expect(labels({ year: 2005, month: 4 }, range)).toEqual([]);
+  });
+});
+
+describe('formatIsoDate', () => {
+  it('tanggal tunggal dengan nama bulan Indonesia', () => {
+    expect(formatIsoDate('2005-05-31')).toBe('31 Mei 2005');
+    expect(formatIsoDate('2003-01-06')).toBe('6 Januari 2003');
+  });
+
+  it('kosong atau tidak valid -> null', () => {
+    expect(formatIsoDate(null)).toBeNull();
+    expect(formatIsoDate('')).toBeNull();
+    expect(formatIsoDate('2005-13-01')).toBeNull();
+    expect(formatIsoDate('2005-02-30')).toBeNull();
   });
 });
