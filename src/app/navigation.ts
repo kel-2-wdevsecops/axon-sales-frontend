@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from 'react';
-import { HomeIcon, ProductsIcon, TrendingUpIcon } from '@/components/layout/icons';
+import { HomeIcon, ProductsIcon, TrendingUpIcon, UsersIcon } from '@/components/layout/icons';
 import type { FilterPage } from '@/lib/filters';
 
 export interface NavEntry {
@@ -19,4 +19,5 @@ export const NAV: NavEntry[] = [
   { to: '/', label: 'Ringkasan', icon: HomeIcon, page: 'overview' },
   { to: '/produk', label: 'Produk', icon: ProductsIcon, page: 'products' },
   { to: '/pertumbuhan', label: 'Pertumbuhan', icon: TrendingUpIcon, page: 'growth' },
+  { to: '/pelanggan', label: 'Pelanggan', icon: UsersIcon, page: 'customers' },
 ];
