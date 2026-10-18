@@ -135,6 +135,77 @@ export interface YearToDate {
   growthPct: number | null;
 }
 
+/** Subset filter yang diterima GET /dashboard/customers: tahun dan geografi (tanpa bulan). */
+export type CustomersFilter = Pick<DashboardFilter, 'year' | 'continent' | 'country'>;
+
+/** Satu customer pada Top 10. Hanya nama perusahaan dan negara: tanpa kontak, alamat, atau credit limit. */
+export interface TopCustomerRow {
+  customerNumber: number;
+  customerName: string;
+  country: string;
+  sales: number;
+  /** Order berbeda pada filter ini. */
+  orders: number;
+  /** Persen dari total penjualan pada filter yang sama (8.55 = 8,55%); null bila total penjualan 0. */
+  sharePct: number | null;
+}
+
+/** Satu sales rep. Termasuk rep yang belum memegang customer (customers/orders/sales = 0). */
+export interface SalesRepRow {
+  employeeNumber: number;
+  name: string;
+  /** Kota kantor. */
+  office: string;
+  /** Customer yang dipegang saat ini; tidak terpengaruh filter tahun. */
+  customers: number;
+  orders: number;
+  sales: number;
+}
+
+/** Satu kantor. Selalu semua kantor tampil, nilainya mengikuti customer yang lolos filter geografi. */
+export interface OfficeRow {
+  officeCode: string;
+  city: string;
+  country: string;
+  territory: string;
+  /** Tidak terpengaruh filter tahun. */
+  customers: number;
+  sales: number;
+}
+
+export type CreditSegmentKey = 'none' | 'low' | 'medium' | 'high';
+
+/** Jumlah customer per segmen credit limit; label segmen datang dari BE. */
+export interface CreditSegmentRow {
+  segment: CreditSegmentKey;
+  label: string;
+  customers: number;
+}
+
+/** GET /api/v1/dashboard/customers */
+export interface Customers {
+  kpi: {
+    /** Customer terdaftar: tidak terpengaruh filter tahun. */
+    customers: number;
+    /** Customer dengan minimal satu order pada filter ini. */
+    activeCustomers: number;
+    /** Customer yang belum pernah order sama sekali: tidak terpengaruh filter tahun. */
+    prospects: number;
+    /** Tidak terpengaruh filter tahun. */
+    withoutSalesRep: number;
+    /** null bila tidak ada order pada filter ini. */
+    avgOrderValue: number | null;
+  };
+  /** Maksimal 10, urut penjualan menurun. */
+  topCustomers: TopCustomerRow[];
+  /** Urut penjualan menurun. */
+  salesReps: SalesRepRow[];
+  /** Urut penjualan menurun. */
+  offices: OfficeRow[];
+  /** Empat segmen; hanya agregat jumlah, tidak terpengaruh filter tahun. */
+  creditSegments: CreditSegmentRow[];
+}
+
 /** GET /api/v1/dashboard/growth */
 export interface Growth {
   /** 'YYYY-MM-DD'; null bila tabel order kosong. */

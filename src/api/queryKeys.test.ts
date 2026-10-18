@@ -13,3 +13,16 @@ describe('queryKeys.products', () => {
     expect(queryKeys.products({})).not.toEqual(queryKeys.overview({}));
   });
 });
+
+describe('queryKeys.customers', () => {
+  it('parameter yang tidak berlaku di halaman (bulan, product line, status) tidak memecah cache', () => {
+    const a = queryKeys.customers({ year: 2004, country: 'France' });
+    const b = queryKeys.customers({ country: 'France', year: 2004, month: 5, productLine: ['Ships'], status: 'Shipped' } as never);
+    expect(a).toEqual(b);
+  });
+
+  it('filter berbeda atau halaman berbeda memakai key berbeda', () => {
+    expect(queryKeys.customers({ year: 2003 })).not.toEqual(queryKeys.customers({ year: 2004 }));
+    expect(queryKeys.customers({})).not.toEqual(queryKeys.growth({}));
+  });
+});
