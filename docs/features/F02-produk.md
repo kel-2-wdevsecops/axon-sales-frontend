@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Prioritas | P0 |
-| Repo / branch | FE · `feat/f02-produk` |
+| Repo / branch | FE · `feature/analisis-produk` |
 | Pasangan BE | `feat/f02-produk` di repo BE (endpoint `GET /api/v1/dashboard/products`) |
 | Route FE | `/produk` |
 | Padanan Power BI | Halaman **Products** |
 | Bergantung pada | FE F06 dan FE F01 (komponen bersama) ter-merge; BE F02 ter-merge (atau BE lokal berjalan dengan endpoint-nya) |
-| Status | ⬜ Belum mulai |
+| Status | 🟨 Sedang dikerjakan |
 
 ## Tujuan
 
@@ -61,22 +61,24 @@ Membantu tim marketing dan produk melihat product line, produk, dan vendor mana 
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f02-produk` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F02 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Products` di `src/types/index.ts`; `api.products(filter)` di `src/api/index.ts` (array `productLine` dikirim sebagai key berulang); key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useProducts` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `productLine`, `year`, `month`).
-- [ ] 4. Halaman di `src/pages/products/` dibungkus `QueryState`; daftarkan route `/produk` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`.
-- [ ] 5. Pasang filter F06 (product line multi-select, tahun, bulan).
-- [ ] 6. Lima kartu KPI (pakai komponen bersama F01).
-- [ ] 7. Grafik Recharts (dengan judul, label sumbu, dan alternatif teks): penjualan per product line (bar horizontal, penjualan + profit; klik bar → toggle product line di filter), order per tahun (treemap atau kolom), order per bulan (area Jan–Des), top 5 vendor (kolom).
-- [ ] 8. Tabel produk dengan `DataTable`: kolom nama, product line, penjualan, profit, kuantitas, order, stok; urut default penjualan menurun; kolom bisa diurutkan; pencarian nama di FE (fungsi murni di `src/lib/` + test); penanda stok rendah (ikon/teks, tidak hanya warna) pada baris `lowStock`.
-- [ ] 9. Keadaan `EmptyState` untuk hasil nol; responsif; cek tidak ada pelanggaran CSP.
-- [ ] 10. Uji manual terhadap BE lokal berisi dump; centang kriteria F06 yang menunggu halaman ini (`/produk?productLine=Ships&productLine=Classic%20Cars&year=2004` dinormalisasi).
-- [ ] 11. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Buat branch `feat/f02-produk` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F02 di `docs/PRD.md` §7 menjadi 🟨. _(Dikerjakan di `feature/analisis-produk`; PRD §7 sudah 🟨.)_
+- [x] 2. Tipe `Products` di `src/types/index.ts`; `api.products(filter)` di `src/api/index.ts` (array `productLine` dikirim sebagai key berulang); key di `src/api/queryKeys.ts`. _(Ditambah tipe `ProductsFilter` dan `ProductRow`. Key berulang sudah dari `paramsSerializer` di `http.ts`; dibuktikan test `src/api/products.test.ts` dan `src/api/queryKeys.test.ts`.)_
+- [x] 3. Hook `useProducts` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `productLine`, `year`, `month`). _(Filter dari `useDashboardFilter('products')`; ada opsi `enabled` seperti `useOverview`.)_
+- [x] 4. Halaman di `src/pages/products/` dibungkus `QueryState`; daftarkan route `/produk` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`. _(Route dimuat lewat `React.lazy`. Menu "Produk" ditambah dan label "Beranda" diganti "Ringkasan".)_
+- [x] 5. Pasang filter F06 (product line multi-select, tahun, bulan). _(`FilterBar page="products"`; product line berupa sekelompok kotak centang.)_
+- [x] 6. Lima kartu KPI (pakai komponen bersama F01). _(`KpiCard`; penjualan dan profit ringkas di nilai utama, nilai penuh `id-ID` di keterangan dan `title`.)_
+- [x] 7. Grafik Recharts (dengan judul, label sumbu, dan alternatif teks): penjualan per product line (bar horizontal, penjualan + profit; klik bar → toggle product line di filter), order per tahun (treemap atau kolom), order per bulan (area Jan–Des), top 5 vendor (kolom). _(Order per tahun memakai kolom. Alternatif teks: ringkasan untuk pembaca layar + `ChartTable`; tombol toggle product line di tabel sebagai jalur keyboard. Kode selesai dan lolos build; tampilan belum diperiksa di browser.)_
+- [x] 8. Tabel produk dengan `DataTable`: kolom nama, product line, penjualan, profit, kuantitas, order, stok; urut default penjualan menurun; kolom bisa diurutkan; pencarian nama di FE (fungsi murni di `src/lib/` + test); penanda stok rendah (ikon/teks, tidak hanya warna) pada baris `lowStock`. _(Pencarian dan pengurutan di `src/lib/productSearch.ts` + test. `DataTable` mendapat `sort`/`onSort`/`cardsBelow` yang kompatibel mundur; di bawah `lg` baris menjadi kartu dan urutan dipilih lewat `<select>`. Tampilan belum diperiksa di browser.)_
+- [ ] 9. Keadaan `EmptyState` untuk hasil nol; responsif; cek tidak ada pelanggaran CSP. _(`EmptyState` sudah dipasang di halaman, grafik, dan tabel; kode tidak memakai `<style>` runtime, sumber eksternal, atau `dangerouslySetInnerHTML`. Responsif belum diukur dan CSP belum dicek di browser pada build produksi.)_
+- [ ] 10. Uji manual terhadap BE lokal berisi dump; centang kriteria F06 yang menunggu halaman ini (`/produk?productLine=Ships&productLine=Classic%20Cars&year=2004` dinormalisasi). _(Belum dikerjakan: butuh BE lokal dan browser.)_
+- [x] 11. `npm run lint`, `npm test`, `npm run build` hijau.
 - [ ] 12. Commit terakhir: status F02 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 ## Kriteria Penerimaan
 
 Nilai yang tampil harus sama dengan respons API; angka acuan lengkap ada di dokumen F02 repo BE.
+
+_Semua kriteria di bawah belum terbukti: butuh BE nyata berisi dump dan pemeriksaan di browser. Logika murni (pengurutan 12 bulan Jan–Des, pencarian nama, pengurutan kolom, serialisasi `productLine` berulang) sudah dicakup test._
 
 - [ ] Tanpa filter, bar penjualan per product line berurutan: Classic Cars, Vintage Cars, Motorcycles, Trucks and Buses, Planes, Ships, Trains.
 - [ ] Top 5 vendor tampil: Classic Metal Creations, Unimax Art Galleries, Gearbox Collectibles, Second Gear Diecast, Exoto Designs.

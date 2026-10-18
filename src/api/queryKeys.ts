@@ -1,5 +1,5 @@
 import { normalizeFilter, PAGE_FILTER_KEYS } from '@/lib/filters';
-import type { GrowthFilter, OverviewFilter } from '@/types';
+import type { GrowthFilter, OverviewFilter, ProductsFilter } from '@/types';
 
 // Semua queryKey react-query berasal dari sini; jangan menulis array literal
 // di hook/komponen. Key statis = `as const` array, key berparameter = fungsi,
@@ -10,6 +10,8 @@ export const queryKeys = {
   filters: ['dashboard-filters'] as const,
   overview: (filter: OverviewFilter) =>
     ['dashboard-overview', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.overview })] as const,
+  products: (filter: ProductsFilter) =>
+    ['dashboard-products', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.products })] as const,
   growth: (filter: GrowthFilter) =>
     ['dashboard-growth', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.growth })] as const,
 };

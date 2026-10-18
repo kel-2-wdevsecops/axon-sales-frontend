@@ -10,7 +10,24 @@ export interface Column<T> {
   render: (row: T) => ReactNode;
   /** Sembunyikan kolom ini dari tampilan kartu mobile (mis. kolom aksi ikon tanpa label yang berguna). */
   hideOnCard?: boolean;
+  /** Header kolom menjadi tombol pengurut; butuh `onSort` pada DataTable. Pengurutan datanya dilakukan pemanggil. */
+  sortable?: boolean;
 }
+
+/** Urutan yang sedang berlaku; `columnId` = `Column.id`. */
+export interface TableSort {
+  columnId: string;
+  direction: 'asc' | 'desc';
+}
+
+/** Lebar layar mulai tabel penuh; di bawahnya baris tampil sebagai kartu. */
+export type CardsBelow = 'md' | 'lg';
+
+// Kelas Tailwind harus tertulis utuh agar ikut terbaca saat build.
+const BREAKPOINT_CLASSES: Record<CardsBelow, { table: string; card: string }> = {
+  md: { table: 'md:grid', card: 'md:hidden' },
+  lg: { table: 'lg:grid', card: 'lg:hidden' },
+};
 
 interface DataTableProps<T> {
   columns: Column<T>[];
@@ -29,6 +46,21 @@ interface DataTableProps<T> {
   isExpanded?: (row: T) => boolean;
   footer?: ReactNode;
   className?: string;
+  /** Urutan aktif, untuk menandai header kolom. Hanya tampilan; baris harus sudah terurut. */
+  sort?: TableSort;
+  /** Dipanggil saat header kolom `sortable` diklik. */
+  onSort?: (columnId: string) => void;
+  /** Tabel penuh mulai `md` (default) atau `lg`; di bawahnya tiap baris menjadi kartu. Pakai `lg` untuk tabel dengan banyak kolom. */
+  cardsBelow?: CardsBelow;
+}
+
+function SortArrow({ direction }: { direction: 'asc' | 'desc' | undefined }) {
+  return (
+    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true" className="shrink-0">
+      <path d="M5 1.5 8 4.5H2z" fill="currentColor" opacity={direction === 'asc' ? 1 : 0.25} />
+      <path d="M5 8.5 2 5.5h6z" fill="currentColor" opacity={direction === 'desc' ? 1 : 0.25} />
+    </svg>
+  );
 }
 
 export function DataTable<T>({
@@ -45,9 +77,13 @@ export function DataTable<T>({
   isExpanded,
   footer,
   className,
+  sort,
+  onSort,
+  cardsBelow = 'md',
 }: DataTableProps<T>) {
   const padX = dense ? 'px-3' : 'px-4';
   const grid = { gridTemplateColumns: gridTemplate };
+  const bp = BREAKPOINT_CLASSES[cardsBelow];
 
   return (
     <div
@@ -60,23 +96,43 @@ export function DataTable<T>({
       <div
         style={grid}
         className={cn(
-          'hidden border-b border-line bg-canvas md:grid',
+          'hidden border-b border-line bg-canvas',
+          bp.table,
           dense ? 'gap-2 py-[7px]' : 'gap-3 py-2.5',
           padX,
         )}
       >
-        {columns.map((column) => (
-          <div
-            key={column.id}
-            className={cn(
-              'truncate font-medium tracking-[0.05em] text-ink-muted uppercase',
-              dense ? 'text-[10.5px]' : 'text-[11px]',
-              column.align === 'right' && 'text-right',
-            )}
-          >
-            {column.label}
-          </div>
-        ))}
+        {columns.map((column) => {
+          const active = sort?.columnId === column.id ? sort.direction : undefined;
+          return (
+            <div
+              key={column.id}
+              className={cn(
+                'truncate font-medium tracking-[0.05em] text-ink-muted uppercase',
+                dense ? 'text-[10.5px]' : 'text-[11px]',
+                column.align === 'right' && 'text-right',
+              )}
+            >
+              {column.sortable && onSort ? (
+                <button
+                  type="button"
+                  onClick={() => onSort(column.id)}
+                  title={`Urutkan menurut ${column.label}`}
+                  className={cn(
+                    'inline-flex max-w-full cursor-pointer items-center gap-1 rounded-sm font-medium tracking-[0.05em] uppercase hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent',
+                    active ? 'text-ink' : 'text-ink-muted',
+                  )}
+                >
+                  <span className="truncate">{column.label}</span>
+                  <SortArrow direction={active} />
+                  {active && <span className="sr-only">{active === 'asc' ? 'urut naik' : 'urut menurun'}</span>}
+                </button>
+              ) : (
+                column.label
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {rows.map((row) => {
@@ -87,7 +143,7 @@ export function DataTable<T>({
           <div key={rowKey(row)} className={cn('border-b border-line-soft', rowClassName?.(row))}>
             <div
               style={grid}
-              className={cn('hidden items-center md:grid', dense ? 'gap-2 py-2.5' : 'gap-3 py-2.5', padX)}
+              className={cn('hidden items-center', bp.table, dense ? 'gap-2 py-2.5' : 'gap-3 py-2.5', padX)}
             >
               {columns.map((column) => (
                 <div
@@ -101,7 +157,7 @@ export function DataTable<T>({
                 </div>
               ))}
             </div>
-            <div className="flex flex-col gap-2 p-3.5 md:hidden">
+            <div className={cn('flex flex-col gap-2 p-3.5', bp.card)}>
               {primary && <div className="min-w-0">{primary.render(row)}</div>}
               {cardRest.length > 0 && (
                 <div className="flex flex-col gap-1.5 border-t border-line-soft pt-2">

@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from 'react';
-import { HomeIcon, TrendingUpIcon } from '@/components/layout/icons';
+import { HomeIcon, ProductsIcon, TrendingUpIcon } from '@/components/layout/icons';
 import type { FilterPage } from '@/lib/filters';
 
 export interface NavEntry {
@@ -15,6 +15,8 @@ export interface NavEntry {
 
 /** Menu sidebar: satu entri per halaman dashboard. */
 export const NAV: NavEntry[] = [
-  { to: '/', label: 'Beranda', icon: HomeIcon, page: 'overview' },
+  
+  { to: '/', label: 'Ringkasan', icon: HomeIcon, page: 'overview' },
+  { to: '/produk', label: 'Produk', icon: ProductsIcon, page: 'products' },
   { to: '/pertumbuhan', label: 'Pertumbuhan', icon: TrendingUpIcon, page: 'growth' },
 ];
