@@ -1,6 +1,8 @@
 import { http } from './http';
 import { normalizeFilter, PAGE_FILTER_KEYS } from '@/lib/filters';
 import type {
+  Customers,
+  CustomersFilter,
   FilterOptions,
   Growth,
   GrowthFilter,
@@ -35,6 +37,10 @@ export const api = {
   /** Hanya `year` yang dikirim (BE `.strict()`); `year` memilih baris, deret pembandingnya tetap dari seluruh data. */
   growth: (filter: GrowthFilter = {}) =>
     http.get<Growth>('/dashboard/growth', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.growth }) }),
+
+  /** Hanya year/continent/country yang dikirim (BE `.strict()`); month, productLine, dan status ditolak 422. */
+  customers: (filter: CustomersFilter = {}) =>
+    http.get<Customers>('/dashboard/customers', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.customers }) }),
 
   /** Hanya year/status yang dikirim (BE `.strict()`); `status` hanya memengaruhi rincian status dan daftar order perlu perhatian. */
   operations: (filter: OperationsFilter = {}) =>

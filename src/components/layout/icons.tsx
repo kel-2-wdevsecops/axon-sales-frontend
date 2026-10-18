@@ -47,6 +47,16 @@ export function TrendingUpIcon(props: IconProps) {
   );
 }
 
+export function UsersIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="9" cy="8" r="3.5" />
+      <path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" />
+      <path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .8 3.5 2.7 3.5 5.7" />
+    </IconBase>
+  );
+}
+
 export function OperationsIcon(props: IconProps) {
   return (
     <IconBase {...props}>
