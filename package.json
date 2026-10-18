@@ -1,7 +1,7 @@
 {
   "name": "axon_sales_frontend",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Antarmuka web untuk Axon Sales API (database classicmodels).",
   "type": "module",
   "scripts": {
