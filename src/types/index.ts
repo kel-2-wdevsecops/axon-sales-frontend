@@ -60,3 +60,49 @@ export interface Overview {
   customersByCountry: { country: string; continent: string | null; customers: number }[];
   salesByYear: { year: number; sales: number; profit: number; isPartial: boolean }[];
 }
+
+/** Subset filter yang diterima GET /dashboard/growth: hanya `year`, dan hanya memilih baris yang ditampilkan. */
+export type GrowthFilter = Pick<DashboardFilter, 'year'>;
+
+/** Satu periode pada tabel pertumbuhan. Semua angka dihitung BE; FE tidak menghitung ulang. */
+export interface GrowthPoint {
+  year: number;
+  sales: number;
+  /** Penjualan periode kalender tepat sebelumnya; null bila periode itu sebelum data dimulai. */
+  previous: number | null;
+  /** Persen (36.13 = +36,13%); null bila tidak ada pembanding atau pembanding 0. */
+  growthPct: number | null;
+  /** Periode berakhir setelah order terakhir (`dataRange.to`). */
+  isPartial: boolean;
+}
+
+export interface GrowthQuarterPoint extends GrowthPoint {
+  /** 1-4 */
+  quarter: number;
+}
+
+export interface GrowthMonthPoint extends GrowthPoint {
+  /** 1-12 */
+  month: number;
+}
+
+/** Januari s.d. bulan terakhir data pada tahun terakhir vs rentang yang sama setahun sebelumnya. */
+export interface YearToDate {
+  year: number;
+  throughMonth: number;
+  sales: number;
+  previous: number;
+  growthPct: number | null;
+}
+
+/** GET /api/v1/dashboard/growth */
+export interface Growth {
+  /** 'YYYY-MM-DD'; null bila tabel order kosong. */
+  dataRange: { from: string | null; to: string | null };
+  /** Tidak terpengaruh filter; null bila tidak ada data. */
+  ytd: YearToDate | null;
+  yearly: GrowthPoint[];
+  quarterly: GrowthQuarterPoint[];
+  monthly: GrowthMonthPoint[];
+  salesProfitByYear: { year: number; sales: number; profit: number }[];
+}
