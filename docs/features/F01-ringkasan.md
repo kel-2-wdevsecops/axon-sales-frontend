@@ -8,7 +8,7 @@
 | Route FE | `/` (menggantikan halaman Beranda kerangka) |
 | Padanan Power BI | Halaman **Home** |
 | Bergantung pada | FE F06 ter-merge; BE F01 ter-merge (atau BE lokal berjalan dengan endpoint-nya) |
-| Status | ⬜ Belum mulai |
+| Status | 🟨 Sedang dikerjakan |
 
 ## Tujuan
 
@@ -66,19 +66,19 @@ Semua parameter opsional. `month` tanpa `year` berarti bulan itu di semua tahun.
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f01-ringkasan` dari `main` terbaru (FE F06 sudah ter-merge); ubah status F01 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Overview` di `src/types/index.ts`; `api.overview(filter)` di `src/api/index.ts`; key react-query di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useOverview` di `src/hooks/` (`staleTime: Infinity`, `placeholderData: keepPreviousData`) yang menerima filter dari `usePageFilters` (F06).
-- [ ] 4. Fungsi murni + test di `src/lib/`: pemformat angka ringkas (`9,6 jt`) dan format uang `id-ID` (`US$9.604.190,61`), pengelompokan "top 10 negara + Lainnya" dari `customersByCountry`, label periode parsial ("Jan–Mei").
-- [ ] 5. Komponen bersama yang akan dipakai ulang F02–F05 (asumsi penempatan, PRD §13): kartu KPI (angka ringkas, nilai penuh di `title`/tooltip), pembungkus kartu grafik dengan judul, label sumbu, dan alternatif teks (ringkasan atau tabel).
-- [ ] 6. Halaman di `src/pages/home/` (atau pindahkan ke `src/pages/overview/`; catat pilihan di PR) membungkus data dengan `QueryState`; pasang filter F06 (tahun, bulan, benua, negara).
-- [ ] 7. Enam kartu KPI; grafik Recharts: top 5 negara (bar horizontal), customer per benua (donut 5 irisan), customer per negara (bar horizontal top 10 + Lainnya), penjualan dan profit per tahun (kolom berkelompok; 2005 berlabel "Jan–Mei"). Label "Customer terdaftar" dipakai untuk metrik yang tidak terpengaruh filter waktu.
-- [ ] 8. Interaksi silang: klik bar negara → `?country=...`; klik irisan benua → `?continent=...` lewat `setFilter` F06.
-- [ ] 9. Sediakan slot untuk panel Sorotan F07 (belum diisi di branch ini).
-- [ ] 10. Keadaan `EmptyState` bila data kosong; responsif: ≤ 640 px kartu KPI 2 kolom dan grafik tidak meluap horizontal.
-- [ ] 11. Daftarkan route dan menu bila berubah (`src/app/App.tsx`, `src/app/navigation.ts`).
+- [x] 1. Buat branch `feat/f01-ringkasan` dari `main` terbaru (FE F06 sudah ter-merge); ubah status F01 di `docs/PRD.md` §7 menjadi 🟨. _(Dikerjakan di `feature/ringkasan-penjualan`, bertumpuk di atas `feature/filter-tautan`; PRD §7 sudah 🟨.)_
+- [x] 2. Tipe `Overview` di `src/types/index.ts`; `api.overview(filter)` di `src/api/index.ts`; key react-query di `src/api/queryKeys.ts`. _(Sudah ada dari branch fondasi; dipakai ulang.)_
+- [x] 3. Hook `useOverview` di `src/hooks/` (`staleTime: Infinity`, `placeholderData: keepPreviousData`) yang menerima filter dari `usePageFilters` (F06). _(Filter dari `useDashboardFilter('overview')`; ada opsi `enabled` agar permintaan menunggu pilihan filter termuat.)_
+- [x] 4. Fungsi murni + test di `src/lib/`: pemformat angka ringkas (`9,6 jt`) dan format uang `id-ID` (`US$9.604.190,61`), pengelompokan "top 10 negara + Lainnya" dari `customersByCountry`, label periode parsial ("Jan–Mei"). _(`format.ts` + `overviewChart.ts` beserta test-nya. Label parsial memakai penulisan `period.ts`: `2005 (Jan-Mei)`, dengan tanda hubung biasa.)_
+- [x] 5. Komponen bersama yang akan dipakai ulang F02–F05 (asumsi penempatan, PRD §13): kartu KPI (angka ringkas, nilai penuh di `title`/tooltip), pembungkus kartu grafik dengan judul, label sumbu, dan alternatif teks (ringkasan atau tabel). _(`KpiCard` dan `ChartCard` dari fondasi; ditambah `ChartTable` dan `components/charts/chartTheme.ts`.)_
+- [x] 6. Halaman di `src/pages/home/` (atau pindahkan ke `src/pages/overview/`; catat pilihan di PR) membungkus data dengan `QueryState`; pasang filter F06 (tahun, bulan, benua, negara). _(Tetap di `src/pages/home/`.)_
+- [ ] 7. Enam kartu KPI; grafik Recharts: top 5 negara (bar horizontal), customer per benua (donut 5 irisan), customer per negara (bar horizontal top 10 + Lainnya), penjualan dan profit per tahun (kolom berkelompok; 2005 berlabel "Jan–Mei"). Label "Customer terdaftar" dipakai untuk metrik yang tidak terpengaruh filter waktu. _(Kode selesai dan lolos build; tampilan belum diperiksa di browser.)_
+- [ ] 8. Interaksi silang: klik bar negara → `?country=...`; klik irisan benua → `?continent=...` lewat `setFilter` F06. _(Kode selesai, termasuk tombol di tabel alternatif sebagai jalur keyboard; belum dicoba di browser.)_
+- [x] 9. Sediakan slot untuk panel Sorotan F07 (belum diisi di branch ini). _(Penanda posisi di `OverviewContent.tsx`, antara KPI dan grafik.)_
+- [ ] 10. Keadaan `EmptyState` bila data kosong; responsif: ≤ 640 px kartu KPI 2 kolom dan grafik tidak meluap horizontal. _(`EmptyState` sudah ada; responsif belum diukur di browser.)_
+- [x] 11. Daftarkan route dan menu bila berubah (`src/app/App.tsx`, `src/app/navigation.ts`). _(Route `/` dimuat lewat `React.lazy` + `Suspense`; menu tidak berubah.)_
 - [ ] 12. Uji manual terhadap BE lokal berisi dump; cek konsol browser pada build produksi untuk pelanggaran CSP.
-- [ ] 13. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 13. `npm run lint`, `npm test`, `npm run build` hijau.
 - [ ] 14. Commit terakhir: status F01 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 ## Kriteria Penerimaan
