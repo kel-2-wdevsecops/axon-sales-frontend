@@ -1,5 +1,73 @@
 import { describe, expect, it } from 'vitest';
-import { EMPTY_VALUE, formatMonth, formatMonthShort, formatNumber, formatPercent, formatUsd } from './format';
+import {
+  EMPTY_VALUE,
+  formatCompact,
+  formatMonth,
+  formatMonthShort,
+  formatNumber,
+  formatPercent,
+  formatUsd,
+  formatUsdCompact,
+} from './format';
+
+describe('formatCompact', () => {
+  it('juta: angka acuan F01 diringkas satu desimal', () => {
+    expect(formatCompact(9604190.61)).toBe('9,6 jt');
+    expect(formatCompact(3825880.25)).toBe('3,8 jt');
+    expect(formatCompact(3273280.05)).toBe('3,3 jt');
+  });
+
+  it('di bawah 1.000 ditulis utuh, tanpa desimal', () => {
+    expect(formatCompact(326)).toBe('326');
+    expect(formatCompact(0)).toBe('0');
+    expect(formatCompact(999)).toBe('999');
+  });
+
+  it('ribu, miliar, triliun', () => {
+    expect(formatCompact(1250)).toBe('1,3 rb');
+    expect(formatCompact(476847.01)).toBe('476,8 rb');
+    expect(formatCompact(2_500_000_000)).toBe('2,5 M');
+    expect(formatCompact(4_000_000_000_000)).toBe('4 T');
+  });
+
+  it('desimal nol tidak ditulis', () => {
+    expect(formatCompact(1_000_000)).toBe('1 jt');
+    expect(formatCompact(2000)).toBe('2 rb');
+  });
+
+  it('naik satuan bila pembulatan mencapai 1.000', () => {
+    expect(formatCompact(999_960)).toBe('1 jt');
+    expect(formatCompact(999_949)).toBe('999,9 rb');
+    expect(formatCompact(999_960_000)).toBe('1 M');
+  });
+
+  it('negatif bertanda minus; yang membulat ke nol tidak', () => {
+    expect(formatCompact(-1_500_000)).toBe('-1,5 jt');
+    expect(formatCompact(-0.2)).toBe('0');
+  });
+
+  it('null, undefined, dan bukan angka -> "--"', () => {
+    expect(formatCompact(null)).toBe(EMPTY_VALUE);
+    expect(formatCompact(undefined)).toBe(EMPTY_VALUE);
+    expect(formatCompact(Number.NaN)).toBe(EMPTY_VALUE);
+  });
+});
+
+describe('formatUsdCompact', () => {
+  it('awalan US$ tanpa spasi', () => {
+    expect(formatUsdCompact(9604190.61)).toBe('US$9,6 jt');
+    expect(formatUsdCompact(326)).toBe('US$326');
+  });
+
+  it('negatif: minus di depan US$', () => {
+    expect(formatUsdCompact(-1_500_000)).toBe('-US$1,5 jt');
+    expect(formatUsdCompact(-0.2)).toBe('US$0');
+  });
+
+  it('null -> "--"', () => {
+    expect(formatUsdCompact(null)).toBe(EMPTY_VALUE);
+  });
+});
 
 describe('formatUsd', () => {
   it('memakai format id-ID tanpa spasi setelah US$', () => {
