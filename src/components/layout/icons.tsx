@@ -29,6 +29,15 @@ export function HomeIcon(props: IconProps) {
   );
 }
 
+export function ProductsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M21 8 12 3 3 8v8l9 5 9-5z" />
+      <path d="m3 8 9 5 9-5M12 13v8" />
+    </IconBase>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <IconBase width="18" height="18" {...props}>
