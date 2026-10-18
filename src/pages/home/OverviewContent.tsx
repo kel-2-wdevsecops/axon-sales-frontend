@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { PanelErrorBoundary } from '@/components/feedback/PanelErrorBoundary';
 import { EmptyState } from '@/components/ui/EmptyState';
 import type { FilterChange } from '@/lib/filterState';
 import {
@@ -12,6 +13,7 @@ import { relevantPartialPeriods } from '@/lib/period';
 import type { DashboardFilter, FilterOptions, Overview } from '@/types';
 import { ContinentDonut } from './ContinentDonut';
 import { CustomersByCountryChart } from './CustomersByCountryChart';
+import { InsightsPanel } from './InsightsPanel';
 import { KpiSection } from './KpiSection';
 import { SalesByYearChart } from './SalesByYearChart';
 import { TopCountriesChart } from './TopCountriesChart';
@@ -44,7 +46,10 @@ export function OverviewContent({ data, filter, options, hasFilter, onFilter }: 
     <>
       <KpiSection kpi={data.kpi} partialLabel={partialLabel} />
 
-      {/* Slot panel Sorotan (F07): dipasang di sini, di antara KPI dan grafik. Belum diisi di F01. */}
+      {/* Panel Sorotan (F07): memuat datanya sendiri; gagal/kosong/render error terisolasi di panel ini. */}
+      <PanelErrorBoundary message="Panel Sorotan tidak dapat ditampilkan.">
+        <InsightsPanel />
+      </PanelErrorBoundary>
 
       <div className="grid gap-3.5 lg:grid-cols-2">
         <TopCountriesChart rows={data.topCountriesBySales} onSelectCountry={(country) => onFilter({ country })} />
