@@ -44,6 +44,49 @@ export function formatNumber(value: number | null | undefined, fractionDigits = 
   return numberFormat(fractionDigits).format(value);
 }
 
+// Satuan ringkas Indonesia (skala pendek), dari terbesar ke terkecil.
+const COMPACT_UNITS = [
+  { size: 1e12, suffix: 'T' },
+  { size: 1e9, suffix: 'M' },
+  { size: 1e6, suffix: 'jt' },
+  { size: 1e3, suffix: 'rb' },
+] as const;
+
+const compactFormat = new Intl.NumberFormat(LOCALE, { minimumFractionDigits: 0, maximumFractionDigits: 1 });
+
+const roundOneDecimal = (value: number) => Math.round(value * 10) / 10;
+
+/**
+ * Angka diringkas untuk kartu dan sumbu grafik: `9.604.190` -> `9,6 jt`,
+ * `326` -> `326`, `1.250` -> `1,3 rb`. Satu desimal paling banyak; satuan
+ * naik bila pembulatan mencapai 1.000 (999.960 -> `1 jt`, bukan `1.000 rb`).
+ * Nilai penuhnya ditampilkan terpisah (tooltip), jadi ini hanya pembulatan tampilan.
+ */
+export function formatCompact(value: number | null | undefined): string {
+  if (!isNumber(value)) return EMPTY_VALUE;
+  const abs = Math.abs(value);
+  const bodyOf = (): string => {
+    for (let i = 0; i < COMPACT_UNITS.length; i++) {
+      const unit = COMPACT_UNITS[i];
+      if (abs < unit.size) continue;
+      const larger = COMPACT_UNITS[i - 1];
+      const roundsUp = larger !== undefined && roundOneDecimal(abs / unit.size) >= 1000;
+      const used = roundsUp ? larger : unit;
+      return `${compactFormat.format(roundOneDecimal(abs / used.size))} ${used.suffix}`;
+    }
+    return numberFormat(0).format(abs);
+  };
+  const body = bodyOf();
+  return `${value < 0 && /[1-9]/.test(body) ? '-' : ''}${body}`;
+}
+
+/** Dolar AS ringkas: `US$9,6 jt`. Nilai penuhnya lewat `formatUsd`. */
+export function formatUsdCompact(value: number | null | undefined): string {
+  if (!isNumber(value)) return EMPTY_VALUE;
+  const body = formatCompact(Math.abs(value));
+  return `${value < 0 && /[1-9]/.test(body) ? '-' : ''}US$${body}`;
+}
+
 /** Persen dari nilai yang sudah berupa persen (39.84 -> `39,84%`); null -> `--`. */
 export function formatPercent(value: number | null | undefined, fractionDigits = 2): string {
   if (!isNumber(value)) return EMPTY_VALUE;
