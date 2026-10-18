@@ -149,3 +149,14 @@ export function serializeFilter(filter: DashboardFilter, scope: FilterScope = {}
   }
   return params;
 }
+
+/**
+ * Pindahkan filter antarhalaman: ambil filter dari query string halaman asal
+ * (`search`, boleh berawalan `?`) dan tulis ulang hanya parameter yang berlaku
+ * di halaman tujuan. Hasil `''` atau `'?year=2004'`, siap ditempel ke path.
+ * Contoh: `?year=2004&country=USA` ke halaman `growth` -> `?year=2004`.
+ */
+export function carryFilterSearch(search: string, page: FilterPage): string {
+  const query = serializeFilter(parseFilter(new URLSearchParams(search)), { keys: PAGE_FILTER_KEYS[page] }).toString();
+  return query ? `?${query}` : '';
+}
