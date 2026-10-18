@@ -1,7 +1,9 @@
+import { useLocation } from 'react-router-dom';
 import { NAV } from '@/app/navigation';
 import { AppVersion } from '@/components/ui/AppVersion';
 import { useHealth } from '@/hooks/useHealth';
 import { cn } from '@/lib/cn';
+import { carryFilterSearch } from '@/lib/filters';
 import { useUiStore } from '@/store/useUiStore';
 import { SidebarNavItem } from './SidebarNavItem';
 
@@ -12,6 +14,8 @@ interface SidebarProps {
 export function Sidebar({ onNavigate }: SidebarProps) {
   const open = useUiStore((s) => s.mobileSidebarOpen);
   const health = useHealth();
+  // Filter di URL sekarang dibawa ke halaman tujuan (hanya yang berlaku di sana).
+  const { search } = useLocation();
 
   return (
     <aside
@@ -32,7 +36,14 @@ export function Sidebar({ onNavigate }: SidebarProps) {
 
       <nav className="flex flex-col gap-0.5" aria-label="Halaman dashboard">
         {NAV.map((entry) => (
-          <SidebarNavItem key={entry.to} to={entry.to} label={entry.label} icon={entry.icon} onClick={onNavigate} />
+          <SidebarNavItem
+            key={entry.to}
+            to={entry.to}
+            search={entry.page ? carryFilterSearch(search, entry.page) : undefined}
+            label={entry.label}
+            icon={entry.icon}
+            onClick={onNavigate}
+          />
         ))}
       </nav>
 

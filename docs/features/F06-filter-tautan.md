@@ -72,30 +72,30 @@ Dipasang di halaman `/` yang sudah ada agar bisa dicoba selama F01 belum ada (as
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f06-filter-tautan` dari `main` terbaru; ubah status F06 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `FilterOptions` di `src/types/index.ts`; endpoint `api.filters` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useFilterOptions` di `src/hooks/` (`staleTime: Infinity`).
-- [ ] 4. `src/lib/filters.ts` (fungsi murni): skema parameter per halaman (tabel "Filter per Halaman"); parse query string; buang nilai tidak valid atau tidak berlaku di halaman itu; normalisasi (`productLine` diurutkan dan di-dedup); penyempitan negara menurut benua dan penghapusan negara yang bukan bagian benua terpilih; pemindahan parameter antarhalaman (hanya yang berlaku di halaman tujuan).
-- [ ] 5. `src/lib/filters.test.ts`: parsing, pembuangan nilai tidak valid, normalisasi urutan, pemindahan parameter antarhalaman, penyempitan negara.
-- [ ] 6. Hook `usePageFilters(schemaHalaman)` di `src/hooks/`: membaca `useSearchParams`, memakai parser murni, mengganti URL dengan `replace` bila ada nilai yang dibuang/dinormalisasi, menyediakan `setFilter`, `removeFilter`, `reset` (untuk dropdown, chip, dan klik grafik).
-- [ ] 7. Komponen filter (mis. `src/components/filters/`): kontrol per parameter dengan `<label>` terlihat; multi-select product line; pilihan negara menyempit menurut benua; dapat dioperasikan dengan keyboard (Tab, panah, Enter, Escape).
-- [ ] 8. Baris "filter aktif": chip `<button>` dengan `aria-label` "Hapus filter Tahun 2004" dan tombol "Reset".
-- [ ] 9. Region `aria-live="polite"` yang mengumumkan hasil (mis. "Menampilkan data tahun 2004") dan indikator kecil "memperbarui…" saat `isFetching` dengan data lama tetap tampil.
-- [ ] 10. Navigasi: `Sidebar`/`SidebarNavItem`/`navigation.ts` membawa parameter yang berlaku di halaman tujuan.
-- [ ] 11. Nama bulan dengan `Intl.DateTimeFormat('id-ID')`.
-- [ ] 12. Pasang di halaman `/` yang ada untuk uji manual terhadap BE lokal; pastikan tidak ada pelanggaran CSP di konsol (tanpa library yang menyuntikkan `<style>`).
-- [ ] 13. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Buat branch `feat/f06-filter-tautan` dari `main` terbaru; ubah status F06 di `docs/PRD.md` §7 menjadi 🟨. (Catatan: branch aktual `feature/filter-tautan` mengikuti konvensi Git Flow, bertumpuk di atas `feature/fondasi-dashboard`; langkah 2 dikerjakan di branch fondasi.)
+- [x] 2. Tipe `FilterOptions` di `src/types/index.ts`; endpoint `api.filters` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
+- [x] 3. Hook `useFilterOptions` di `src/hooks/` (`staleTime: Infinity`).
+- [x] 4. `src/lib/filters.ts` (fungsi murni): skema parameter per halaman (tabel "Filter per Halaman"); parse query string; buang nilai tidak valid atau tidak berlaku di halaman itu; normalisasi (`productLine` diurutkan dan di-dedup); penyempitan negara menurut benua dan penghapusan negara yang bukan bagian benua terpilih; pemindahan parameter antarhalaman (hanya yang berlaku di halaman tujuan).
+- [x] 5. `src/lib/filters.test.ts`: parsing, pembuangan nilai tidak valid, normalisasi urutan, pemindahan parameter antarhalaman, penyempitan negara.
+- [x] 6. Hook `usePageFilters(schemaHalaman)` di `src/hooks/`: membaca `useSearchParams`, memakai parser murni, mengganti URL dengan `replace` bila ada nilai yang dibuang/dinormalisasi, menyediakan `setFilter`, `removeFilter`, `reset` (untuk dropdown, chip, dan klik grafik). (Catatan: hook bernama `useDashboardFilter`; helper murni tambahan di `src/lib/filterState.ts`, `period.ts`, `clipboard.ts`.)
+- [x] 7. Komponen filter (mis. `src/components/filters/`): kontrol per parameter dengan `<label>` terlihat; multi-select product line; pilihan negara menyempit menurut benua; dapat dioperasikan dengan keyboard (Tab, panah, Enter, Escape).
+- [x] 8. Baris "filter aktif": chip `<button>` dengan `aria-label` "Hapus filter Tahun 2004" dan tombol "Reset".
+- [x] 9. Region `aria-live="polite"` yang mengumumkan hasil (mis. "Menampilkan data tahun 2004") dan indikator kecil "memperbarui…" saat `isFetching` dengan data lama tetap tampil.
+- [x] 10. Navigasi: `Sidebar`/`SidebarNavItem`/`navigation.ts` membawa parameter yang berlaku di halaman tujuan.
+- [x] 11. Nama bulan dengan `Intl.DateTimeFormat('id-ID')`.
+- [ ] 12. Pasang di halaman `/` yang ada untuk uji manual terhadap BE lokal; pastikan tidak ada pelanggaran CSP di konsol (tanpa library yang menyuntikkan `<style>`). (Belum dicentang: diuji pada build produksi lewat `vite preview` dengan API tiruan, 0 tag `<style>` runtime, tetapi bukan terhadap BE lokal dan konsol CSP belum diperiksa pada image nginx.)
+- [x] 13. `npm run lint`, `npm test`, `npm run build` hijau.
 - [ ] 14. Commit terakhir: status F06 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 ## Kriteria Penerimaan
 
 - [ ] Membuka `/produk?productLine=Ships&productLine=Classic%20Cars&year=2004` menampilkan data terfilter, dan URL dinormalisasi menjadi urutan product line alfabetis. (Dibuktikan penuh saat FE F02 ter-merge; di F06 lewat unit test dan uji di halaman `/`.)
-- [ ] `/?year=abc&country=Atlantis` dibuka tanpa error; parameter tidak valid dibuang dari URL.
-- [ ] Memilih benua Oceania membuat pilihan negara hanya Australia dan New Zealand.
-- [ ] Tombol Reset menghapus semua parameter halaman itu.
+- [x] `/?year=abc&country=Atlantis` dibuka tanpa error; parameter tidak valid dibuang dari URL.
+- [x] Memilih benua Oceania membuat pilihan negara hanya Australia dan New Zealand.
+- [x] Tombol Reset menghapus semua parameter halaman itu.
 - [ ] Navigasi Ringkasan `?year=2004&country=USA` → Pertumbuhan menghasilkan `/pertumbuhan?year=2004`. (Dibuktikan penuh saat FE F03 ter-merge.)
 - [ ] Semua filter bisa dipakai tanpa mouse.
-- [ ] Unit test `src/lib/filters.ts`: parsing, pembuangan nilai tidak valid, normalisasi urutan, pemindahan parameter antarhalaman.
+- [x] Unit test `src/lib/filters.ts`: parsing, pembuangan nilai tidak valid, normalisasi urutan, pemindahan parameter antarhalaman.
 
 ## Definisi Selesai
 

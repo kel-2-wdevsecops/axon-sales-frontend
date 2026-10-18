@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { FilterOptions } from '@/types';
-import { normalizeFilter, PAGE_FILTER_KEYS, parseFilter, serializeFilter } from './filters';
+import { carryFilterSearch, normalizeFilter, PAGE_FILTER_KEYS, parseFilter, serializeFilter } from './filters';
 
 const q = (query: string) => new URLSearchParams(query);
 
@@ -167,5 +167,32 @@ describe('normalizeFilter', () => {
     expect(PAGE_FILTER_KEYS.growth).toEqual(['year']);
     expect(PAGE_FILTER_KEYS.customers).toEqual(['year', 'continent', 'country']);
     expect(PAGE_FILTER_KEYS.operations).toEqual(['year', 'status']);
+  });
+});
+
+describe('carryFilterSearch', () => {
+  it('hanya membawa parameter yang berlaku di halaman tujuan', () => {
+    expect(carryFilterSearch('?year=2004&country=USA', 'growth')).toBe('?year=2004');
+    expect(carryFilterSearch('?year=2004&month=3&productLine=Ships&status=Shipped', 'products')).toBe(
+      '?year=2004&month=3&productLine=Ships',
+    );
+    expect(carryFilterSearch('year=2004&continent=Europe&country=France&status=Shipped', 'customers')).toBe(
+      '?year=2004&continent=Europe&country=France',
+    );
+  });
+
+  it('tanpa parameter yang berlaku -> string kosong', () => {
+    expect(carryFilterSearch('?country=USA', 'growth')).toBe('');
+    expect(carryFilterSearch('', 'overview')).toBe('');
+  });
+
+  it('nilai tidak valid dan parameter asing tidak ikut terbawa', () => {
+    expect(carryFilterSearch('?year=abc&utm_source=x&month=2', 'overview')).toBe('?month=2');
+  });
+
+  it('urutan productLine dinormalisasi', () => {
+    expect(carryFilterSearch('?productLine=Ships&productLine=Classic%20Cars', 'products')).toBe(
+      '?productLine=Classic+Cars&productLine=Ships',
+    );
   });
 });
