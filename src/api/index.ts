@@ -9,6 +9,7 @@ import type {
   Health,
   Operations,
   OperationsFilter,
+  Insight,
   Overview,
   OverviewFilter,
   Products,
@@ -45,4 +46,7 @@ export const api = {
   /** Hanya year/status yang dikirim (BE `.strict()`); `status` hanya memengaruhi rincian status dan daftar order perlu perhatian. */
   operations: (filter: OperationsFilter = {}) =>
     http.get<Operations>('/dashboard/operations', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.operations }) }),
+
+  /** Sorotan insight. Tanpa parameter: BE (`.strict()`) menolak parameter apa pun dan menghitung atas seluruh data. */
+  insights: () => http.get<Insight[]>('/dashboard/insights'),
 };

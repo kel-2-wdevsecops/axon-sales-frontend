@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Prioritas | P1 |
-| Repo / branch | FE · `feat/f07-sorotan-insight` |
+| Repo / branch | FE · `feature/sorotan-insight` |
 | Pasangan BE | `feat/f07-sorotan-insight` di repo BE (endpoint `GET /api/v1/dashboard/insights`) |
 | Tampil di | Panel "Sorotan" pada `/` (halaman F01) |
 | Padanan | Slide Suggestions, Insight's, dan Recommendation di PPTX |
 | Bergantung pada | FE F01 ter-merge (slot panel); BE F07 ter-merge (atau BE lokal berjalan dengan endpoint-nya) |
-| Status | ⬜ Belum mulai |
+| Status | 🟨 Sedang dikerjakan |
 
 ## Tujuan
 
@@ -53,17 +53,19 @@ Aturan insight (9 aturan, ambang, dan template teks) seluruhnya dihitung di BE; 
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f07-sorotan-insight` dari `main` terbaru (FE F01 sudah ter-merge); ubah status F07 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Insight` (`id`, `severity`, `title`, `detail`, `recommendation`, `metric`, `link`) di `src/types/index.ts`; `api.insights()` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useInsights` di `src/hooks/` (`staleTime: Infinity`); tanpa filter, sehingga tidak ikut berubah saat filter halaman berganti.
-- [ ] 4. Komponen panel Sorotan (mis. `src/pages/home/components/`) yang mengisi slot di halaman F01, dibungkus `QueryState`.
-- [ ] 5. Kartu insight: ikon + teks label severity (Perlu tindakan / Positif / Info), judul, detail, rekomendasi; seluruh kartu dapat diklik ke route internal `link` (dapat difokus dan dioperasikan dengan keyboard).
-- [ ] 6. Maksimal 6 kartu terlihat dan tombol "Lihat semua" untuk menampilkan sisanya (fungsi murni pembatas + test di `src/lib/` bila ada logika).
-- [ ] 7. Keadaan kosong "Belum ada insight"; keadaan error ditangani `QueryState` tanpa merusak halaman Ringkasan.
-- [ ] 8. Responsif; cek CSP.
-- [ ] 9. Uji manual terhadap BE lokal berisi dump dan terhadap DB kosong.
-- [ ] 10. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Buat branch `feature/sorotan-insight` dari `main` terbaru (FE F01 sudah ter-merge); ubah status F07 di `docs/PRD.md` §7 menjadi 🟨.
+- [x] 2. Tipe `Insight` (`id`, `severity`, `title`, `detail`, `recommendation`, `metric`, `link`) di `src/types/index.ts`; `api.insights()` di `src/api/index.ts`; key di `src/api/queryKeys.ts` (+ tes di `queryKeys.test.ts`).
+- [x] 3. Hook `useInsights` di `src/hooks/` (`staleTime: Infinity`); tanpa filter, sehingga tidak ikut berubah saat filter halaman berganti.
+- [x] 4. Komponen panel Sorotan (`src/pages/home/InsightsPanel.tsx`) yang mengisi slot di `OverviewContent` (halaman F01), dibungkus `QueryState` dan `PanelErrorBoundary`.
+- [x] 5. Kartu insight (`src/pages/home/InsightCard.tsx`): ikon + teks label severity (Perlu tindakan / Positif / Info), judul, detail, rekomendasi; seluruh kartu adalah `Link` React Router ke route internal `link` (dapat difokus dan dioperasikan dengan keyboard). `link` divalidasi terhadap daftar putih (`src/lib/insights.ts`); di luar daftar, kartu tampil tanpa tautan.
+- [x] 6. Maksimal 6 kartu terlihat dan tombol "Lihat semua" untuk menampilkan sisanya (fungsi murni `limitInsights` + tes di `src/lib/insights.test.ts`).
+- [x] 7. Keadaan kosong "Belum ada insight"; keadaan error ditangani `QueryState` tanpa merusak halaman Ringkasan.
+- [ ] 8. Responsif; cek CSP. Kode: grid 1/2/3 kolom (`md`/`xl`), teks `break-words`, tanpa `style=`, `<style>` runtime, sumber eksternal, atau `dangerouslySetInnerHTML`. Belum terbukti: tampilan belum dilihat di browser (tanpa overflow horizontal) dan CSP nginx belum diuji pada build yang disajikan.
+- [ ] 9. Uji manual terhadap BE lokal berisi dump dan terhadap DB kosong. Belum dilakukan.
+- [x] 10. `npm run lint`, `npm test` (218 tes), `npm run build` hijau di lokal. CI belum diperiksa.
 - [ ] 11. Commit terakhir: status F07 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
+
+> Catatan: tautan kartu ke `/pelanggan` dan `/operasional` baru berfungsi setelah F04/F05 ter-merge. Sebelum itu rute tersebut jatuh ke `Navigate` ke `/` (rute `*` di `App.tsx`); daftar putih sudah memuatnya. Kartu `top-market` (`link: "/"`) mengarah ke halaman Ringkasan yang sedang dibuka.
 
 ## Kriteria Penerimaan
 

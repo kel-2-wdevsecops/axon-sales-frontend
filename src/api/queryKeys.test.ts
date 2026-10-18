@@ -41,3 +41,11 @@ describe('queryKeys.operations', () => {
     expect(queryKeys.operations({})).not.toEqual(queryKeys.growth({}));
   });
 });
+
+describe('queryKeys.insights', () => {
+  it('key statis tanpa filter dan berbeda dari key halaman lain', () => {
+    expect(queryKeys.insights).toEqual(['dashboard-insights']);
+    expect(queryKeys.insights).not.toEqual(queryKeys.overview({}));
+    expect(queryKeys.insights).not.toEqual(queryKeys.growth({}));
+  });
+});

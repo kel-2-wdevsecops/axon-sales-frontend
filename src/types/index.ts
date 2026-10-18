@@ -263,3 +263,21 @@ export interface Operations {
   /** Maksimal 5 baris, urut hari menurun. */
   slowestShipments: { orderNumber: number; customerName: string; days: number }[];
 }
+
+/** Tingkat insight: `warning` perlu tindakan, `positive` tren baik, `info` fakta struktural. */
+export type InsightSeverity = 'warning' | 'positive' | 'info';
+
+/** Satu sorotan dari GET /api/v1/dashboard/insights. Teks sudah jadi (Indonesia, angka id-ID) dari BE. */
+export interface Insight {
+  id: string;
+  severity: InsightSeverity;
+  title: string;
+  detail: string;
+  recommendation: string;
+  metric: { value: number; unit: 'percent' | 'count' | 'currency' };
+  /**
+   * Route internal dari BE. Bertipe `string` sengaja: FE memvalidasinya terhadap
+   * daftar putih (`safeInsightLink` di src/lib/insights.ts) sebelum jadi tautan.
+   */
+  link: string;
+}

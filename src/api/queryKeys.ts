@@ -18,4 +18,6 @@ export const queryKeys = {
     ['dashboard-customers', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.customers })] as const,
   operations: (filter: OperationsFilter) =>
     ['dashboard-operations', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.operations })] as const,
+  // Tanpa filter: satu entri cache untuk seluruh aplikasi.
+  insights: ['dashboard-insights'] as const,
 };
