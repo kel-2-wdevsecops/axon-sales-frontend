@@ -47,6 +47,26 @@ export function TrendingUpIcon(props: IconProps) {
   );
 }
 
+export function UsersIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="9" cy="8" r="3.5" />
+      <path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" />
+      <path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2 .8 3.5 2.7 3.5 5.7" />
+    </IconBase>
+  );
+}
+
+export function OperationsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <path d="M9 4V3h6v1" />
+      <path d="M9 11h6M9 15h4" />
+    </IconBase>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <IconBase width="18" height="18" {...props}>

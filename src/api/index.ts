@@ -1,6 +1,20 @@
 import { http } from './http';
 import { normalizeFilter, PAGE_FILTER_KEYS } from '@/lib/filters';
-import type { FilterOptions, Growth, GrowthFilter, Health, Insight, Overview, OverviewFilter, Products, ProductsFilter } from '@/types';
+import type {
+  Customers,
+  CustomersFilter,
+  FilterOptions,
+  Growth,
+  GrowthFilter,
+  Health,
+  Operations,
+  OperationsFilter,
+  Insight,
+  Overview,
+  OverviewFilter,
+  Products,
+  ProductsFilter,
+} from '@/types';
 
 /**
  * Satu-satunya lapisan yang tahu endpoint BE. Alur wajib satu arah:
@@ -24,6 +38,14 @@ export const api = {
   /** Hanya `year` yang dikirim (BE `.strict()`); `year` memilih baris, deret pembandingnya tetap dari seluruh data. */
   growth: (filter: GrowthFilter = {}) =>
     http.get<Growth>('/dashboard/growth', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.growth }) }),
+
+  /** Hanya year/continent/country yang dikirim (BE `.strict()`); month, productLine, dan status ditolak 422. */
+  customers: (filter: CustomersFilter = {}) =>
+    http.get<Customers>('/dashboard/customers', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.customers }) }),
+
+  /** Hanya year/status yang dikirim (BE `.strict()`); `status` hanya memengaruhi rincian status dan daftar order perlu perhatian. */
+  operations: (filter: OperationsFilter = {}) =>
+    http.get<Operations>('/dashboard/operations', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.operations }) }),
 
   /** Sorotan insight. Tanpa parameter: BE (`.strict()`) menolak parameter apa pun dan menghitung atas seluruh data. */
   insights: () => http.get<Insight[]>('/dashboard/insights'),

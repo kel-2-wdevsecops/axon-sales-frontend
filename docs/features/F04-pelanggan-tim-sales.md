@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Prioritas | P1 |
-| Repo / branch | FE · `feat/f04-pelanggan-tim-sales` |
+| Repo / branch | FE · `feature/pelanggan-tim-sales` |
 | Pasangan BE | `feat/f04-pelanggan-tim-sales` di repo BE (endpoint `GET /api/v1/dashboard/customers`) |
 | Route FE | `/pelanggan` |
 | Padanan | Insight PPTX (slide 9, 11, 14) dan query `Axon SQL.sql` no. 2, 10, 18, 22, 26. Tidak ada di Power BI |
 | Bergantung pada | FE F06 dan FE F01 (komponen bersama) ter-merge; BE F04 ter-merge (atau BE lokal berjalan dengan endpoint-nya) |
-| Status | ⬜ Belum mulai |
+| Status | 🟨 Sedang dikerjakan |
 
 ## Tujuan
 
@@ -65,23 +65,25 @@ Membantu manajer sales mengenali pelanggan bernilai tinggi, prospek yang belum p
 
 ## Langkah Pengerjaan
 
-- [ ] 1. Buat branch `feat/f04-pelanggan-tim-sales` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F04 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Customers` di `src/types/index.ts` (hanya field pada kontrak); `api.customers(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useCustomers` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `year`, `continent`, `country`).
-- [ ] 4. Halaman di `src/pages/customers/` dibungkus `QueryState`; daftarkan route `/pelanggan` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`.
-- [ ] 5. Pasang filter F06 (tahun, benua, negara).
-- [ ] 6. Lima kartu KPI (komponen bersama F01), dengan label "Customer terdaftar" dan "Prospek (belum order)".
-- [ ] 7. Tabel Top 10 customer (`DataTable`: nama perusahaan, negara, penjualan, order, porsi %); tanpa kolom data pribadi.
-- [ ] 8. Bar penjualan per sales rep + tabel (nama, kantor, customer, order, penjualan), termasuk rep bernilai 0.
-- [ ] 9. Bar penjualan per kantor (kota, territory, penjualan, customer) dan donut segmen credit limit (4 segmen) dengan alternatif teks.
-- [ ] 10. Keterangan atribusi "penugasan saat ini"; `EmptyState`; responsif; cek CSP.
-- [ ] 11. Uji manual terhadap BE lokal berisi dump.
-- [ ] 12. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Branch dibuat dari `main` terbaru (nama aktual `feature/pelanggan-tim-sales`, bukan `feat/f04-...`); status F04 di `docs/PRD.md` §7 menjadi 🟨.
+- [x] 2. Tipe `Customers` di `src/types/index.ts` (hanya field pada kontrak); `api.customers(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
+- [x] 3. Hook `useCustomers` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `useDashboardFilter('customers')` (parameter: `year`, `continent`, `country`).
+- [x] 4. Halaman di `src/pages/customers/` dibungkus `QueryState`; daftarkan route `/pelanggan` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`.
+- [x] 5. Pasang filter F06 (tahun, benua, negara).
+- [x] 6. Lima kartu KPI (komponen bersama F01), dengan label "Customer terdaftar" dan "Prospek (belum order)".
+- [x] 7. Tabel Top 10 customer (`DataTable`: nama perusahaan, negara, penjualan, order, porsi %); tanpa kolom data pribadi.
+- [x] 8. Bar penjualan per sales rep + tabel (nama, kantor, customer, order, penjualan), termasuk rep bernilai 0.
+- [x] 9. Bar penjualan per kantor (kota, territory, penjualan, customer) dan donut segmen credit limit (4 segmen) dengan alternatif teks.
+- [x] 10. Keterangan atribusi "penugasan saat ini"; `EmptyState`; responsif; cek CSP. *(Belum terbukti di browser: responsif dan CSP baru diperiksa dari kode, tanpa render nyata.)*
+- [ ] 11. Uji manual terhadap BE lokal berisi dump. *(Belum dilakukan.)*
+- [x] 12. `npm run lint`, `npm test`, `npm run build` hijau.
 - [ ] 13. Commit terakhir: status F04 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 ## Kriteria Penerimaan
 
 Nilai yang tampil harus sama dengan respons API; angka acuan lengkap ada di dokumen F04 repo BE.
+
+> Belum terbukti: semua kriteria di bawah butuh BE nyata berisi dump (langkah 11); FE baru diuji dengan lint, tes unit, dan build.
 
 - [ ] Tanpa filter, KPI menampilkan 122 customer, 98 aktif, 24 prospek, 22 tanpa sales rep, rata-rata nilai order 29.460,71.
 - [ ] Top 2 customer tampil: Euro+ Shopping Channel 820.689,54 (26 order) dan Mini Gifts Distributors Ltd. 591.827,34 (17 order).
