@@ -1,6 +1,13 @@
+import { normalizeFilter, PAGE_FILTER_KEYS } from '@/lib/filters';
+import type { OverviewFilter } from '@/types';
+
 // Semua queryKey react-query berasal dari sini; jangan menulis array literal
 // di hook/komponen. Key statis = `as const` array, key berparameter = fungsi,
 // mis. `overview: (filter: OverviewFilter) => ['dashboard-overview', filter] as const`.
+// Filter dinormalisasi dulu supaya dua URL yang setara memakai entri cache yang sama.
 export const queryKeys = {
   health: ['health'] as const,
+  filters: ['dashboard-filters'] as const,
+  overview: (filter: OverviewFilter) =>
+    ['dashboard-overview', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.overview })] as const,
 };
