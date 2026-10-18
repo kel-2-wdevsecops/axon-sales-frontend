@@ -1,3 +1,4 @@
+import { FilterBar } from '@/components/filters/FilterBar';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Spinner } from '@/components/ui/Spinner';
 import { useHealth } from '@/hooks/useHealth';
@@ -13,6 +14,10 @@ export function HomePage() {
   return (
     <>
       <PageHeader title="Axon Sales Dashboard" subtitle="Kerangka aplikasi: halaman dashboard dibangun di src/pages" />
+
+      {/* Dipasang di sini agar bisa dicoba selama F01 belum ada; tiap halaman memasang
+          FilterBar dengan skemanya sendiri (lihat PAGE_FILTER_KEYS). */}
+      <FilterBar page="overview" />
 
       <section className="flex flex-col gap-2 rounded-xl border border-line bg-white px-4 py-3.5 text-[13px]">
         <h2 className="m-0 text-[14px] font-semibold">Status</h2>
