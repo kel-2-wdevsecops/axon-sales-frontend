@@ -18,6 +18,5 @@ export const NAV: NavEntry[] = [
   
   { to: '/', label: 'Ringkasan', icon: HomeIcon, page: 'overview' },
   { to: '/produk', label: 'Produk', icon: ProductsIcon, page: 'products' },
-,
   { to: '/pertumbuhan', label: 'Pertumbuhan', icon: TrendingUpIcon, page: 'growth' },
 ];
