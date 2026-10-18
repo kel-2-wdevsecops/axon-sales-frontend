@@ -24,6 +24,21 @@
   --color-accent-hover: #27272a;
   --color-accent-soft: #f4f4f5;
 
+  /* Penanda periode parsial (pastel kuning, kontras teks 4,6:1). */
+  --color-note-soft: #fbf3db;
+  --color-note-ink: #956400;
+
+  /* Seri grafik. Semuanya >= 3:1 terhadap putih (WCAG 1.4.11); makna tidak
+     boleh hanya bergantung pada warna, jadi grafik tetap perlu label/legenda.
+     Pakai lewat `fill="var(--color-chart-1)"`, bukan hex di komponen. */
+  --color-chart-1: #1f6c9f;
+  --color-chart-2: #346538;
+  --color-chart-3: #956400;
+  --color-chart-4: #9f2f2d;
+  --color-chart-5: #52525b;
+  /* Garis kisi dan sumbu grafik. */
+  --color-chart-grid: #e4e4e7;
+
   --animate-ams-in: ams-in 0.18s cubic-bezier(0.4, 0, 0.2, 1) both;
   --animate-ams-fade: ams-fade 0.16s ease both;
   --animate-shake: shake 0.3s ease;
