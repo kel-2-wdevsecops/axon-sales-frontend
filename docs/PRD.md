@@ -113,7 +113,7 @@ Status per 6 Oktober 2026. Baseline repo FE: boilerplate v1.0.0 (shell aplikasi,
 | F00 | Fondasi API | P0 | – | – (tidak ada pekerjaan FE) | – | – | – | [F00](features/F00-fondasi-api-keamanan.md) |
 | F06 | Filter global dan tautan berbagi | P0 | semua | `feature/filter-tautan` | BE F06 (`/filters`) | 🟨 | – | [F06](features/F06-filter-tautan.md) |
 | F01 | Ringkasan penjualan | P0 | `/` | `feature/ringkasan-penjualan` | FE F06; BE F01 | 🟨 | – | [F01](features/F01-ringkasan.md) |
-| F02 | Analisis produk | P0 | `/produk` | `feat/f02-produk` | FE F06, FE F01 (komponen bersama); BE F02 | ⬜ | – | [F02](features/F02-produk.md) |
+| F02 | Analisis produk | P0 | `/produk` | `feature/analisis-produk` | FE F06, FE F01 (komponen bersama); BE F02 | 🟨 | – | [F02](features/F02-produk.md) |
 | F03 | Analisis pertumbuhan | P0 | `/pertumbuhan` | `feat/f03-pertumbuhan` | FE F06, FE F01; BE F03 | ⬜ | – | [F03](features/F03-pertumbuhan.md) |
 | F04 | Pelanggan dan tim sales | P1 | `/pelanggan` | `feat/f04-pelanggan-tim-sales` | FE F06, FE F01; BE F04 | ⬜ | – | [F04](features/F04-pelanggan-tim-sales.md) |
 | F05 | Operasional order | P1 (piutang P2) | `/operasional` | `feat/f05-operasional-order` (piutang: `feat/f05-piutang`) | FE F06, FE F01; BE F05 | ⬜ | – | [F05](features/F05-operasional-order.md) |
