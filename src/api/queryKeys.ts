@@ -14,4 +14,6 @@ export const queryKeys = {
     ['dashboard-products', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.products })] as const,
   growth: (filter: GrowthFilter) =>
     ['dashboard-growth', normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.growth })] as const,
+  // Tanpa filter: satu entri cache untuk seluruh aplikasi.
+  insights: ['dashboard-insights'] as const,
 };
