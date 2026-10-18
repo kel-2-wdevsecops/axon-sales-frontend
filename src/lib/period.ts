@@ -44,6 +44,12 @@ export function describeDataRange(range: DataRange): string | null {
   return `${text(from)} - ${text(to)}`;
 }
 
+/** "31 Mei 2005"; null bila kosong atau bukan tanggal 'YYYY-MM-DD' yang valid. */
+export function formatIsoDate(value: string | null): string | null {
+  const date = parseIsoDate(value);
+  return date ? `${date.day} ${formatMonth(date.month)} ${date.year}` : null;
+}
+
 function span(firstMonth: number, lastMonth: number): string {
   return firstMonth === lastMonth ? formatMonthShort(lastMonth) : `${formatMonthShort(firstMonth)}-${formatMonthShort(lastMonth)}`;
 }

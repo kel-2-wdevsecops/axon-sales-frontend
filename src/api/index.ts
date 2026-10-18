@@ -1,6 +1,6 @@
 import { http } from './http';
 import { normalizeFilter, PAGE_FILTER_KEYS } from '@/lib/filters';
-import type { FilterOptions, Health, Overview, OverviewFilter, Products, ProductsFilter } from '@/types';
+import type { FilterOptions, Growth, GrowthFilter, Health, Overview, OverviewFilter, Products, ProductsFilter } from '@/types';
 
 /**
  * Satu-satunya lapisan yang tahu endpoint BE. Alur wajib satu arah:
@@ -20,4 +20,8 @@ export const api = {
   /** Hanya year/month/productLine yang dikirim; `productLine` menjadi key berulang (`productLine=A&productLine=B`). */
   products: (filter: ProductsFilter = {}) =>
     http.get<Products>('/dashboard/products', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.products }) }),
+
+  /** Hanya `year` yang dikirim (BE `.strict()`); `year` memilih baris, deret pembandingnya tetap dari seluruh data. */
+  growth: (filter: GrowthFilter = {}) =>
+    http.get<Growth>('/dashboard/growth', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.growth }) }),
 };
