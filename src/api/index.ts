@@ -7,6 +7,8 @@ import type {
   Growth,
   GrowthFilter,
   Health,
+  Operations,
+  OperationsFilter,
   Overview,
   OverviewFilter,
   Products,
@@ -39,4 +41,8 @@ export const api = {
   /** Hanya year/continent/country yang dikirim (BE `.strict()`); month, productLine, dan status ditolak 422. */
   customers: (filter: CustomersFilter = {}) =>
     http.get<Customers>('/dashboard/customers', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.customers }) }),
+
+  /** Hanya year/status yang dikirim (BE `.strict()`); `status` hanya memengaruhi rincian status dan daftar order perlu perhatian. */
+  operations: (filter: OperationsFilter = {}) =>
+    http.get<Operations>('/dashboard/operations', { ...normalizeFilter(filter, { keys: PAGE_FILTER_KEYS.operations }) }),
 };

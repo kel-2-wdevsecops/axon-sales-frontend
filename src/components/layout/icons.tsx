@@ -57,6 +57,16 @@ export function UsersIcon(props: IconProps) {
   );
 }
 
+export function OperationsIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <path d="M9 4V3h6v1" />
+      <path d="M9 11h6M9 15h4" />
+    </IconBase>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <IconBase width="18" height="18" {...props}>

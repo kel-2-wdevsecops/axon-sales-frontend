@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Prioritas | P1 (bagian Indikasi Piutang: P2) |
-| Repo / branch | FE · `feat/f05-operasional-order`; bagian piutang: `feat/f05-piutang` |
+| Repo / branch | FE · `feature/operasional-order`; bagian piutang: `feat/f05-piutang` |
 | Pasangan BE | `feat/f05-operasional-order` dan `feat/f05-piutang` di repo BE (endpoint `GET /api/v1/dashboard/operations`) |
 | Route FE | `/operasional` |
 | Padanan | Insight PPTX (slide 16, 17) dan query `Axon SQL.sql` no. 15, 17, 25. Tidak ada di Power BI |
 | Bergantung pada | FE F06 dan FE F01 (komponen bersama) ter-merge; BE F05 ter-merge (piutang: BE `feat/f05-piutang` ter-merge) |
-| Status | ⬜ Belum mulai (piutang: ⬜, menunggu keputusan Q4) |
+| Status | 🟨 Sedang dikerjakan (piutang: ⬜ ditunda, menunggu keputusan Q4; branch `feat/f05-piutang`) |
 
 ## Tujuan
 
@@ -73,31 +73,33 @@ Membuat order bermasalah terlihat sebelum pelanggan mengeluh: order yang tertaha
 
 **Bagian inti (P1), branch `feat/f05-operasional-order`**
 
-- [ ] 1. Buat branch `feat/f05-operasional-order` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F05 di `docs/PRD.md` §7 menjadi 🟨.
-- [ ] 2. Tipe `Operations` di `src/types/index.ts` (`receivables` opsional); `api.operations(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`.
-- [ ] 3. Hook `useOperations` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `year`, `status`).
-- [ ] 4. Fungsi murni + test di `src/lib/`: pemotongan catatan 160 karakter, format tanggal, label bucket.
-- [ ] 5. Halaman di `src/pages/operations/` dibungkus `QueryState`; daftarkan route `/operasional` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`.
-- [ ] 6. Pasang filter F06 (tahun, status).
-- [ ] 7. Lima/enam kartu KPI (Order, Terkirim, Perlu perhatian, Lewat tenggat, Rata-rata hari kirim; sertakan `lateShipments`) dengan keterangan "per {asOf}".
-- [ ] 8. Bar status order (jumlah order dan penjualan per status).
-- [ ] 9. Tabel order perlu perhatian (`DataTable`: no. order, tanggal order, tenggat, status, customer, nilai, catatan) dengan catatan sebagai teks biasa dipotong 160 karakter.
-- [ ] 10. Histogram 4 bucket lama pengiriman dan daftar 5 pengiriman terlama; alternatif teks untuk grafik.
-- [ ] 11. `EmptyState`; responsif; cek CSP.
-- [ ] 12. Uji manual terhadap BE lokal berisi dump, termasuk data uji berisi `<script>` pada `comments` (tidak dieksekusi, tampil sebagai teks).
-- [ ] 13. `npm run lint`, `npm test`, `npm run build` hijau.
+- [x] 1. Buat branch `feat/f05-operasional-order` dari `main` terbaru (FE F06 dan F01 sudah ter-merge); ubah status F05 di `docs/PRD.md` §7 menjadi 🟨. _(Dikerjakan di `feature/operasional-order`, dari main yang memuat fondasi, F06, F01, F02, dan F03; PRD §7 sudah 🟨 dan kolom branch diisi.)_
+- [x] 2. Tipe `Operations` di `src/types/index.ts` (`receivables` opsional); `api.operations(filter)` di `src/api/index.ts`; key di `src/api/queryKeys.ts`. _(Ditambah `Operations`, `OperationsFilter`, `AttentionOrder`, `ShippingBucket`. `receivables` belum ditambahkan: BE belum menyediakannya dan bagian piutang ditunda ke `feat/f05-piutang`. `api.operations` hanya mengirim `year` dan `status`; tes di `src/api/operations.test.ts` dan `queryKeys.test.ts`.)_
+- [x] 3. Hook `useOperations` di `src/hooks/` (`staleTime: Infinity`, `keepPreviousData`) dengan filter dari `usePageFilters` (parameter: `year`, `status`). _(Filter dari `useDashboardFilter('operations')`; opsi `enabled` seperti `useGrowth`.)_
+- [x] 4. Fungsi murni + test di `src/lib/`: pemotongan catatan 160 karakter, format tanggal, label bucket. _(`operations.ts` + `operations.test.ts`: `toOrderNote` (per code point, aman terhadap surrogate pair, elipsis, spasi dirapatkan), `formatOrderDate`, `describeAsOf`, `formatDays`, `toLeadTimeColumns`, `statusTone`, `isOperationsEmpty`, ringkasan teks grafik.)_
+- [x] 5. Halaman di `src/pages/operations/` dibungkus `QueryState`; daftarkan route `/operasional` di `src/app/App.tsx` dan menu di `src/app/navigation.ts`. _(Route lazy; menu "Operasional" dengan ikon baru `OperationsIcon`, `page: 'operations'`.)_
+- [x] 6. Pasang filter F06 (tahun, status). _(`FilterBar page="operations"`: tahun dan status.)_
+- [x] 7. Lima/enam kartu KPI (Order, Terkirim, Perlu perhatian, Lewat tenggat, Rata-rata hari kirim; sertakan `lateShipments`) dengan keterangan "per {asOf}". _(Enam kartu di `OperationsKpiSection`; "Lewat tenggat" berketerangan "Belum dikirim, per {asOf}"; kartu "Terlambat dikirim" untuk `lateShipments`.)_
+- [x] 8. Bar status order (jumlah order dan penjualan per status). _(Dua grafik bar horizontal terpisah karena skala jumlah dan US$ berbeda jauh: `OrdersByStatusChart` dan `SalesByStatusChart`, masing-masing dengan judul, label sumbu, legenda, dan alternatif tabel; status berikon + teks.)_
+- [x] 9. Tabel order perlu perhatian (`DataTable`: no. order, tanggal order, tenggat, status, customer, nilai, catatan) dengan catatan sebagai teks biasa dipotong 160 karakter. _(`AttentionOrdersTable` + `OrderNote`: catatan sebagai child teks React (tanpa HTML), teks lengkap lewat `title` dan teks `sr-only`. Urutan dari BE (tenggat terdekat), tanpa pengurutan sisi FE.)_
+- [x] 10. Histogram 4 bucket lama pengiriman dan daftar 5 pengiriman terlama; alternatif teks untuk grafik. _(`ShippingLeadTimeChart` lewat `ChartCard` + `ChartTable`; `SlowestShipments` berupa daftar berurut.)_
+- [x] 11. `EmptyState`; responsif; cek CSP. _(Keadaan kosong di `OperationsContent` dan tiap grafik; `DataTable` menjadi kartu per baris di bawah `lg`; tanpa `<style>` runtime, sumber eksternal, atau `dangerouslySetInnerHTML`. Tampilan di browser belum dilihat: belum terbukti.)_
+- [ ] 12. Uji manual terhadap BE lokal berisi dump, termasuk data uji berisi `<script>` pada `comments` (tidak dieksekusi, tampil sebagai teks). _(Belum dikerjakan: butuh BE lokal dan browser. Yang sudah ada baru tes unit bahwa `toOrderNote` membiarkan isi HTML sebagai teks mentah.)_
+- [x] 13. `npm run lint`, `npm test`, `npm run build` hijau. _(Lint tanpa peringatan, 222 tes lulus (14 berkas), build sukses; dijalankan di branch ini sebelum commit.)_
 - [ ] 14. Commit terakhir: status F05 di PRD §7 menjadi 🟩, isi kolom PR; buka PR ke `main`.
 
 **Bagian piutang (P2), branch `feat/f05-piutang`, hanya bila Q4 disetujui dan BE `feat/f05-piutang` ter-merge**
 
-- [ ] 15. Buat branch `feat/f05-piutang` dari `main` terbaru; status baris piutang menjadi 🟨.
-- [ ] 16. Kartu "Indikasi piutang": `billed`, `paid`, `outstanding`, dan jumlah customer melewati credit limit, dirender hanya bila `receivables` ada.
-- [ ] 17. Catatan keterbatasan wajib terlihat: pembayaran tidak terhubung ke order, angka adalah indikasi, bukan saldo piutang akuntansi.
-- [ ] 18. `npm run lint`, `npm test`, `npm run build` hijau; PR ke `main`, status 🟩.
+- [ ] 15. Buat branch `feat/f05-piutang` dari `main` terbaru; status baris piutang menjadi 🟨. _(Ditunda, branch `feat/f05-piutang`.)_
+- [ ] 16. Kartu "Indikasi piutang": `billed`, `paid`, `outstanding`, dan jumlah customer melewati credit limit, dirender hanya bila `receivables` ada. _(Ditunda, branch `feat/f05-piutang`; BE belum menyediakan datanya.)_
+- [ ] 17. Catatan keterbatasan wajib terlihat: pembayaran tidak terhubung ke order, angka adalah indikasi, bukan saldo piutang akuntansi. _(Ditunda, branch `feat/f05-piutang`.)_
+- [ ] 18. `npm run lint`, `npm test`, `npm run build` hijau; PR ke `main`, status 🟩. _(Ditunda, branch `feat/f05-piutang`.)_
 
 ## Kriteria Penerimaan
 
 Nilai yang tampil harus sama dengan respons API; angka acuan lengkap ada di dokumen F05 repo BE.
+
+_Catatan: belum terbukti. Kriteria inti di bawah butuh BE lokal berisi dump dan browser; di branch ini baru lolos lint, test unit (pemotongan catatan, format tanggal/hari, wadah lama pengiriman, ringkasan grafik, bentuk permintaan API), dan build. Kriteria piutang (P2) ditunda ke branch `feat/f05-piutang`._
 
 - [ ] Bar status menampilkan: Shipped 303, Cancelled 6, In Process 6, On Hold 4, Resolved 4, Disputed 3, dengan penjualan per status yang jumlahnya 9.604.190,61.
 - [ ] KPI "Perlu perhatian" = 13 dan tabel memuat 13 order (nilai total 366.005,91); 4 order On Hold beralasan credit limit terlampaui.
