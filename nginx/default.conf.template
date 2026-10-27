@@ -56,7 +56,7 @@ server {
         client_max_body_size 1m;
     }
 
-    # Dibaca health check deploy.yml; tidak boleh di-cache.
+    # Dibaca health check staging & deploy; tidak boleh di-cache.
     location = /version.json {
         expires -1;
     }

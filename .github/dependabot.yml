@@ -11,7 +11,7 @@
 #
 # Yang TIDAK diperbarui Dependabot: NODE_VERSION dan digest nginx-unprivileged
 # di Dockerfile, serta image yang di-pin di ci.yml (semgrep, gitleaks). Naikkan
-# manual; gerbang Trivy di deploy.yml yang mengingatkan kalau base image
+# manual; gerbang Trivy di build.yml yang mengingatkan kalau base image
 # tertinggal.
 
 version: 2

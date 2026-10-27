@@ -22,7 +22,7 @@ RUN npm run build
 # nginx-unprivileged berjalan sebagai user 101 (bukan root) di port 8080.
 # Nama lengkap docker.io/... supaya juga bisa di-build dengan Podman. Di-pin
 # ke digest; Dependabot tidak menaikkannya, naikkan manual (gerbang
-# Trivy di deploy.yml yang mengingatkan kalau tertinggal).
+# Trivy di build.yml yang mengingatkan kalau tertinggal).
 FROM docker.io/nginxinc/nginx-unprivileged:1.30.5-alpine@sha256:ed04ec1ff34502c339ee5c3ae3f855442398edc1d05591e2b98981dcbbd20b1e
 
 # Template diproses envsubst oleh entrypoint image saat container start dan
