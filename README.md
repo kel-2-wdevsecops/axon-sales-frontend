@@ -73,12 +73,16 @@ Image produksi berisi nginx-unprivileged (non-root, port 8080) dan hasil build s
 
 ## CI/CD
 
-Sama dengan repo BE:
+Sama dengan repo BE. Alur setiap push ke `main`: **ci → build → staging → release → deploy**.
 - **PR ke `main`** (`ci.yml`): commitlint, lint, `npm audit`, test, typecheck & build, Semgrep (OWASP + React), Gitleaks, Trivy fs, SBOM.
-- **Push ke `main`** (`release.yml`): CI dijalankan dulu, lalu release-please membuka atau memperbarui **PR rilis**.
-- **PR rilis di-merge**: `deploy.yml` berjalan: build, scan image, DAST (ZAP ke nginx), push GHCR, Cosign, provenance, verifikasi di server, deploy by digest, health check `/version.json`, dan rollback otomatis.
+- **Push ke `main`** (`release.yml`):
+  1. `ci.yml` dijalankan lagi.
+  2. `build.yml`: build image, scan image (Trivy), DAST (ZAP ke nginx), push `:<sha>` ke GHCR, Cosign, provenance.
+  3. `staging.yml`: verifikasi tanda tangan dan provenance, deploy by digest ke VPS staging lewat SSH, health check `/version.json`, rollback otomatis. Stack VPS (MariaDB, BE, FE, cloudflared) dan panduannya ada di `staging/` repo BE.
+  4. release-please membuka atau memperbarui **PR rilis**, atau membuat tag `vX.Y.Z` kalau PR rilis baru di-merge.
+- **PR rilis di-merge** (`deploy.yml`): digest yang sama dengan yang lolos staging diberi tag `:X.Y.Z` dan `:latest` (tanpa build ulang), lalu verifikasi di server produksi, deploy by digest, health check `/version.json`, dan rollback otomatis.
 
-Deploy **hanya** terjadi saat PR rilis di-merge. Pesan commit wajib Conventional Commits: dicek hook husky dan CI, dan dipakai release-please untuk menentukan versi.
+Deploy produksi **hanya** terjadi saat PR rilis di-merge; staging menerima setiap push ke `main`. Pesan commit wajib Conventional Commits: dicek hook husky dan CI, dan dipakai release-please untuk menentukan versi.
 
 ### Persiapan server (sekali, sebelum merge PR rilis pertama)
 

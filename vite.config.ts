@@ -11,7 +11,7 @@ const file = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 const version: string = JSON.parse(readFileSync(file('./package.json'), 'utf8')).version
 
 /**
- * Menulis dist/version.json saat build. Dibaca health check deploy.yml untuk
+ * Menulis dist/version.json saat build. Dibaca health check staging & deploy untuk
  * memastikan container yang jalan memang versi yang baru dirilis (sama
  * seperti `version` di GET /api/v1/health milik BE).
  */
